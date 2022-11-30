@@ -17,6 +17,17 @@ header {
     color:white;
 }
 
+.toast{
+    background-color: #56CCF2;
+    border-radius: 5px;
+    color: black;
+    padding: 2rem;
+    margin: 1rem;
+}
+
+.toast h4 span{
+    color:rgb(235, 33, 33);
+}
 #cart{
     position: fixed;
     height: 95%;
@@ -312,9 +323,9 @@ footer .footer-icons{
     font-size:25px;
     margin:20px;
 }
-#about div{
-    /* display:flex; */
-}
+/* #about div{
+    display:flex;
+} */
 
 #about img{
     float:left;
