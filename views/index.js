@@ -4,6 +4,51 @@ const cartbutton = document.getElementById('cartbtn');
 const cancelbutton = document.getElementById('cancelbtn');
 const nav = document.getElementById('cartnav');
 
+const musicdiv = document.getElementById('music-content');
+const merchdiv = document.getElementById('merch-content');
+
+document.addEventListener("DOMContentLoaded", async () => {
+    try{
+    const productres = await axios.get("http://localhost:4000/store");
+    const products = productres.data;
+    let product;
+    for(i=0; i<4; i++){
+        const productele = document.createElement('div');
+        product = products[i];
+        productele.id=`album${product.id}`
+        productele.innerHTML = `  <h3>${product.title}</h3>
+                                    <div class="image-container">
+                                        <img class="prod-images" src="${product.imageUrl}" alt="">
+                                    </div>
+                                    <div class="prod-details">
+                                        <span>$<span>${product.price}</span></span>
+                                        <button class="shop-item-button" type='button'>ADD TO CART</button>
+                                    </div> `;
+        musicdiv.appendChild(productele);
+    }
+    for(i=4; i<6; i++){
+        const productele = document.createElement('div');
+        product = products[i];
+        productele.id=`album${product.id}`
+        productele.innerHTML = `  <h3>${product.title}</h3>
+                                    <div class="image-container">
+                                        <img class="prod-images" src="${product.imageUrl}" alt="">
+                                    </div>
+                                    <div class="prod-details">
+                                        <span>$<span>${product.price}</span></span>
+                                        <button class="shop-item-button" type='button'>ADD TO CART</button>
+                                    </div> `;
+        merchdiv.appendChild(productele);
+    }
+    } catch(err){
+        if(err){
+            console.log(err);
+        }
+    }
+    
+                        
+})
+
 cartbutton.addEventListener("click", ()=>{
     nav.classList.toggle('active');
 })
@@ -47,7 +92,7 @@ parentContainer.addEventListener('click',(e)=>{
 
         cart_items.appendChild(div);
 
-        document.getElementById('total-value').innerText = total_price;
+        document.getElementById('total-value').innerText = parseFloat(total_price).toFixed(2);
 
         const container = document.getElementById('container');
 

@@ -160,6 +160,11 @@ section h2{
     flex-wrap: wrap;
     justify-content:space-around;
 }
+.music-container{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:space-around;
+}
 #music-content div{
     margin:30px;
 }
