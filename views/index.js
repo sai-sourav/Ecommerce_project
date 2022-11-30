@@ -1,15 +1,20 @@
-const cart_items = document.querySelector('#cart .cart-items');
+const cart_items = document.querySelector('.cart-items');
+
+const cartbutton = document.getElementById('cartbtn');
+const cancelbutton = document.getElementById('cancelbtn');
+const nav = document.getElementById('cartnav');
+
+cartbutton.addEventListener("click", ()=>{
+    nav.classList.toggle('active');
+})
+
+cancelbutton.addEventListener("click", ()=>{
+    nav.classList.toggle('active');
+})
 
 
 const parentContainer = document.getElementById('EcommerceContainer');
 parentContainer.addEventListener('click',(e)=>{
-
-    if (e.target.className=='cart-btn-bottom' || e.target.className=='cart-bottom' || e.target.className=='cart-holder'){
-        document.querySelector('#cart').style = "display:block;"
-    }
-    if (e.target.className=='cancel'){
-        document.querySelector('#cart').style = "display:none;"
-    }
 
     if (e.target.className === "shop-item-button"){
         const id = e.target.parentNode.parentNode.id
@@ -39,35 +44,6 @@ parentContainer.addEventListener('click',(e)=>{
             <input type="text" value="1">
             <button>REMOVE</button>
         </span>`
-
-        // const span_img = document.createElement('span');
-        // span_img.className = "cart-item cart-column";
-        // const img = document.createElement('img');
-        // img.src = img_src;
-        // img.classList.Add = "cart-img";
-        // img.alt = "";
-        // span_img.appendChild(img);
-        // const span = document.createElement('span');
-        // span.innerText = name;
-        // span_img.appendChild(span);
-        // div.appendChild(span_img);
-
-        // const span_price = document.createElement('span');
-        // span_price.className = "cart-price cart-column";
-        // span_price.innerText= price;
-        // div.appendChild(span_price);
-
-        // const span_quantity = document.createElement('span');
-        // span_quantity.className = "cart-quantity cart-column";
-        // const inputele = document.createElement('input');
-        // inputele.type = "text"
-        // span_quantity.appendChild(inputele);
-        
-        // const removebutton = document.createElement('button');
-        // removebutton.innerText = "Remove";
-        // span_quantity.appendChild(removebutton);
-
-        // div.appendChild(span_quantity);
 
         cart_items.appendChild(div);
 
