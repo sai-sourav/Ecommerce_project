@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const adminroute = require('./routes/adminroute');
+const cartroute = require('./routes/cart');
 const sequelize = require('./util/database');
 
 const Product = require('./models/product');
@@ -11,10 +12,11 @@ const app = express();
 
 app.use(cors());
 
-app.use(bodyParser.json({ extended:false }));
+app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cartroute);
 app.use(adminroute);
 
 sequelize

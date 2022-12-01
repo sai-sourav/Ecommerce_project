@@ -44,12 +44,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(err){
             console.log(err);
         }
-    }
-    
-                        
+    }                      
 })
 
 cartbutton.addEventListener("click", ()=>{
+    showcart();
     nav.classList.toggle('active');
 })
 
@@ -59,54 +58,85 @@ cancelbutton.addEventListener("click", ()=>{
 
 
 const parentContainer = document.getElementById('EcommerceContainer');
-parentContainer.addEventListener('click',(e)=>{
+parentContainer.addEventListener('click', async (e)=>{
 
     if (e.target.className === "shop-item-button"){
         const id = e.target.parentNode.parentNode.id
         const name = document.querySelector(`#${id} h3`).innerText;
         const img_src = document.querySelector(`#${id} img`).src;
         const price = e.target.parentNode.firstElementChild.firstElementChild.innerText;
-        let total_price = document.getElementById('total-value').innerText;
 
-        total_price = parseFloat(total_price) + parseFloat(price);
-
-        if (document.getElementById(`in-cart-${id}`)){
+        if (document.querySelector(`#cart-item-${id}`)){
             alert('This item is already added to the cart');
-            return
+            return new Promise(resolve)
         }
 
-        const div = document.createElement('div');
-        div.className = "cart-row";
-        div.id = `in-cart-${id}`
+        try{
 
-        div.innerHTML = `
-        <span class='cart-item cart-column'>
-        <img class='cart-img' src="${img_src}" alt="">
-            <span>${name}</span>
-        </span>
-        <span class='cart-price cart-column'>${price}</span>
-        <span class='cart-quantity cart-column'>
-            <input type="text" value="1">
-            <button>REMOVE</button>
-        </span>`
+            const response = await axios.post("http://localhost:4000/cart",{
+                productid : id,
+                productname : name,
+                productimg : img_src,
+                productprice : price
+            })
 
-        cart_items.appendChild(div);
+            console.log(response);
+            const container = document.getElementById('container');
 
-        document.getElementById('total-value').innerText = parseFloat(total_price).toFixed(2);
+            const notif = document.createElement('div');
+            notif.classList.add('toast');
+            
+            notif.innerHTML = `<h4>Your Product : <span>${name}</span> is added to the cart<h4>`;
+            container.appendChild(notif);
 
-        const container = document.getElementById('container');
-
-        const notif = document.createElement('div');
-        notif.classList.add('toast');
-        
-        notif.innerHTML = `<h4>Your Product : <span>${name}</span> is added to the cart<h4>`;
-        container.appendChild(notif);
-
-        setTimeout(() => {
-            notif.remove();
-        }, 1000)
+            setTimeout(() => {
+                notif.remove();
+            }, 1000)
+            showcart();
+        }catch(err){
+            if (err){
+                console.log(err);
+            }
+        }
 
     }
 
 })
+
+async function showcart(){
+    
+    try{
+        const cartproductsres = await axios.get("http://localhost:4000/cart");
+        const cartproducts = cartproductsres.data;
+        const cart_items = document.querySelector('.cart-items');
+        cart_items.innerHTML = "";
+        document.getElementById('total-value').innerText = "";
+        let cartproduct;
+        let total_price = document.getElementById('total-value').innerText;
+        total_price = 0;
+        for(i=0; i<cartproducts.length; i++){
+            cartproduct = cartproducts[i];
+            const cartitem = document.createElement('div');
+            total_price = parseFloat(total_price) + parseFloat(cartproduct.productprice);
+            cartitem.id = cartproduct.productid;
+            cartitem.className = "cart-row";
+            cartitem.innerHTML = `<span id='cart-item-${cartproduct.productid}' class='cart-item cart-column'>
+                                        <img class='cart-img' src="${cartproduct.productimg}" alt="">
+                                        <span>${cartproduct.productname}</span>
+                                  </span>
+                                  <span class='cart-price cart-column'>$${cartproduct.productprice}</span>
+                                  <span class='cart-quantity cart-column'>
+                                        <input type="text">
+                                        <button>REMOVE</button>
+                                  </span>`
+            cart_items.appendChild(cartitem);
+            document.getElementById('total-value').innerText = parseFloat(total_price).toFixed(2);
+        }
+    }catch(err){
+        if (err){
+            console.log(err);
+        }
+    }
+
+}
 
