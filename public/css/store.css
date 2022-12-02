@@ -16,6 +16,27 @@ header {
     background:#777;
     color:white;
 }
+.pagenation {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.pagenation button {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    padding: 0.5rem;
+    border: 1px solid black;
+    margin: 0 0.5rem;
+}
+
+.pagenation button:hover,
+.pagenation button:active,
+.pagenation button.active{
+    background: green;
+    color: white;
+}
+
 #cartbtn {
     background-color: black;
     cursor: pointer;
