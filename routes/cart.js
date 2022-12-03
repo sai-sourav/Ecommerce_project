@@ -6,8 +6,10 @@ const controller = require('../controllers/controller');
 
 router.get('/cart', controller.getcartproducts);
 
-// router.get('/cart/count', controller.cartproductscount);
-
 router.post('/cart', controller.postcartproducts);
+
+router.post('/cart/delete', controller.cartproductdelete);
+
+router.get('/carttoorder', controller.carttoorder);
 
 module.exports = router;

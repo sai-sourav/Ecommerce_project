@@ -1,12 +1,15 @@
 const Product = require('../models/product');
 const Cart = require('../models/cart');
+const Cartitem = require('../models/cartitem');
+const User = require('../models/user');
 const Items_Per_page = 2;
 
 exports.getproducts = async (req, res, next) => {
     try{
         const page = parseInt(req.query.page);
-        let count = await Product.count();
-        let products = await Product.findAll({ offset: (page - 1) * Items_Per_page, limit: Items_Per_page });
+        let allproducts = await req.user.getProducts();
+        let count = allproducts.length;
+        let products = await req.user.getProducts({ offset: (page - 1) * Items_Per_page, limit: Items_Per_page });
         res.status(200).json(
             {
                 products : products,
@@ -28,8 +31,10 @@ exports.getproducts = async (req, res, next) => {
 exports.getcartproducts = async (req, res, next) => {
     try{
         const page = parseInt(req.query.page);
-        const count = await Cart.count();
-        let cartproducts = await Cart.findAll({ offset: (page - 1) * Items_Per_page, limit: Items_Per_page });
+        let cart = await req.user.getCart();
+        let allcartproducts = await cart.getProducts();
+        const count = await allcartproducts.length;
+        let cartproducts = await cart.getProducts({ offset: (page - 1) * Items_Per_page, limit: Items_Per_page });
         res.status(200).json({
             products : cartproducts,
             currentpage : page,
@@ -47,49 +52,66 @@ exports.getcartproducts = async (req, res, next) => {
 }
 
 exports.postcartproducts = async (req, res, next) => {
+    const productid = parseInt(req.body.productid);
+    let newquantity = 1;
     try{
-        console.log(req.body);
-        const productid = req.body.productid;
-        const productname = req.body.productname;
-        const productimg = req.body.productimg;
-        const productprice = req.body.productprice;
-        let response = await Cart.create({
-            productid : productid,
-            productname: productname,
-            productimg: productimg,
-            productprice: productprice
-        })
+        const fetchedcart = await req.user.getCart();
+        const cartproducts = await fetchedcart.getProducts({ where: { id : productid } });
+        let cartproduct;
+        if (cartproducts.length > 0){
+        cartproduct = cartproducts[0];
+        }
+        if(cartproduct){
+            const oldquantity = cartproduct.cartitem.quantity;
+            newquantity = oldquantity + 1;
+        }
+        else{
+            cartproduct = await Product.findByPk(productid);
+        }
+        const response = await fetchedcart.addProduct(cartproduct, { through: { quantity : newquantity}});
         res.status(201).json({created : response});
-    } catch(err) {
+    } catch(err){
+        if(err){
+            res.status(500).json({error : err});
+        }
+    }  
+
+}
+
+exports.cartproductdelete = async (req, res, next) => {
+    const productid = parseInt(req.body.productid);
+    console.log("ondelete",productid);
+    try{
+        const fetchedcart = await req.user.getCart();
+        const cartproducts = await fetchedcart.getProducts({ where: { id : productid } });
+        const cartproduct = cartproducts[0];
+        console.log("delete",cartproducts);
+        const response = await cartproduct.cartitem.destroy();
+        res.status(201).json({deleted : response});
+    }catch(err){
+        if(err){
+            res.status(500).json({error : err});
+        }
+    } 
+}
+
+exports.carttoorder = async (req,res, next) => {
+    try{
+        const fetchedcart = await req.user.getCart();
+        const cartproducts = await fetchedcart.getProducts();
+        // console.log(cartproducts);
+        if (cartproducts.length !== 0){
+            const createdorder = await req.user.createOrder();
+            for(i=0; i<cartproducts.length; i++){
+                const quantity = cartproducts[i].cartitem.quantity;
+                const response = await createdorder.addProduct(cartproducts[i], { through: { quantity : quantity}});
+            }
+            await Cartitem.destroy({where: {cartId : fetchedcart.id}});
+            res.status(200).json({ orderid: createdorder.id , success : true});
+        }
+    }catch(err){
         if(err){
             res.status(500).json({error : err});
         }
     }
 }
-
-// exports.productscount = async (req,res,next) => {
-//     try{
-//         const count = await Product.count();
-//         const pages = Math.ceil(count/Items_Per_page);
-//         res.status(200).json({count : pages});
-//     } catch(err) {
-//         if(err){
-//             res.status(500).json({error : err});
-//         }
-//     }
-     
-// }
-
-// exports.cartproductscount = async (req,res,next) => {
-
-//     try{
-//         const count = await Cart.count();
-//         const pages = Math.ceil(count/Items_Per_page);
-//         res.status(200).json({count : pages});
-//     } catch(err) {
-//         if(err){
-//             res.status(500).json({error : err});
-//         }
-//     }
-     
-// }

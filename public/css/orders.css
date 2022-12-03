@@ -1,0 +1,10 @@
+#orders{
+    max-width:900px;
+    margin:0 auto;
+    font-size: 22px;
+}
+#orders h3{
+    text-align: left;
+    font-size:25px;
+    margin:20px;
+}
