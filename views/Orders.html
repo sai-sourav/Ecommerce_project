@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="../public/css/about.css">
     <link rel="stylesheet" href="../public/css/store.css">
     <link rel="stylesheet" href="../public/css/orders.css">
-    <script src="index.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="orders.js" defer></script>
 </head>
 <body>
     <header>
@@ -22,13 +23,79 @@
     </header>
     <section id="orders">
         <h2>ORDERS</h2>
-        <div id="orders">
-            <div id = "order1" class="orders">
-                   <h3>orderno: 1</h3>
-                   <button class="cancel-order-button" type='button'>Cancel order</button>
+        <div id = "orderslist" class="order-item-list">
+            <!-- <div id = "order1" class="order-item">
+                <h3>orderno: 1</h3>
+                <button id="show" class="show-products-button" type='button'>Show details</button>
+                <button class="cancel-order-button" type='button'>Cancel order</button>
             </div>
+            <div id="orderdetails" class="orderdetails">
+                <div class="cart-row cart-header">
+                    <span class='cart-item cart-column'>ITEM</span>
+                    <span class='cart-price cart-column'>PRICE</span>
+                    <span class='cart-quantity cart-column'>QUANTITY</span>
+                </div>
+                <div class='cart-items'>
+                    <div class="cart-row">
+                        <span class='cart-item cart-column'>
+                            <img class='cart-img' src="/img/Album 3.png" alt="">
+                            <span>Album 3</span>
+                        </span>
+                        <span class='cart-price cart-column'>$9.99</span>
+                        <span class='cart-quantity cart-column'>
+                            <input type="text" readonly>
+                        </span>
+                    </div>  
+                </div>
+                <div class="cart-total">
+                    <span>
+                        <span class='total-title'> <strong>Total</strong>
+                            </span>
+                        $<span id='total-value'>0</span>
+                    </span>
+                </div>
+            </div>
+            <br>
+            <div id = "order2" class="order-item">
+                <h3>orderno: 2</h3>
+                <button class="show-products-button" type='button'>Show details</button>
+                <button class="cancel-order-button" type='button'>Cancel order</button>
+            </div>  -->
         </div>
     </section>
+    <nav id="nav">
+        <h2>Ordered Products</h2>
+        <button id="cancelbtn" class="cancel">X</button>
+        <div class="cart-row cart-header">
+            <span class='cart-item cart-column'>ITEM</span>
+            <span class='cart-price cart-column'>PRICE</span>
+            <span class='cart-quantity cart-column'>QUANTITY</span>
+        </div>
+        <div class='cart-items'>
+            <!-- <div class="cart-row">
+                <span class='cart-item cart-column'>
+                    <img class='cart-img' src="/img/Album 3.png" alt="">
+                    <span>Album 3</span>
+                </span>
+                <span class='cart-price cart-column'>$9.99</span>
+                <span class='cart-quantity cart-column'>
+                    <input type="text">
+                    <button>REMOVE</button>
+                </span>
+            </div>  -->
+        </div>
+        <div class="cart-total">
+            <span>
+                <span class='total-title'> <strong>Total</strong>
+                    </span>
+                $<span id='total-value'>0</span>
+            </span>
+        </div>
+        <div id="pages" class="pagenation">
+            <!-- <button id="1">1</button>
+            <button id="2">2</button> -->
+        </div>
+    </nav>
     <footer>
         <div class="footer-title">
             The Generics

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const adminroute = require('./routes/adminroute');
 const cartroute = require('./routes/cart');
+const orderroute = require('./routes/orders');
 const sequelize = require('./util/database');
 
 const Product = require('./models/product');
@@ -29,7 +30,7 @@ app.use((req, res, next) => {
     })
     .catch(err => console.log(err));
 })
-
+app.use(orderroute);
 app.use(cartroute);
 app.use(adminroute);
 

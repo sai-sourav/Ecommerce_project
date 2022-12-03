@@ -115,3 +115,54 @@ exports.carttoorder = async (req,res, next) => {
         }
     }
 }
+
+exports.getorders = async (req, res, next) => {
+     try{
+        const fetchedorders = await req.user.getOrders();
+        res.status(200).json(fetchedorders);
+     }
+     catch(err){
+        if(err){
+            res.status(500).json({error : err});
+        }
+    }
+}
+
+exports.getorderdetails = async (req, res, next) => {
+    const orderid = req.params.orderid;
+    const page = parseInt(req.query.page);
+    try{
+        const orders = await req.user.getOrders({where: {id : orderid}});
+        let order = orders[0];
+        let allproducts = await order.getProducts();
+        const count = await allproducts.length;
+        const products = await order.getProducts({ offset: (page - 1) * Items_Per_page, limit: Items_Per_page });
+        res.status(200).json({
+            products : products,
+            currentpage : page,
+            hasnextpage : Items_Per_page*page < count,
+            haspreviouspage : page > 1,
+            nextpage : page + 1,
+            previouspage : page - 1,
+            lastpage : Math.ceil(count / Items_Per_page)
+        });
+    }catch(err){
+        if(err){
+            res.status(500).json({error : err});
+        }
+    }
+}
+
+exports.deleteorder = async (req, res, next) => {
+    const orderid = req.params.orderid;
+    try{
+        const orders = await req.user.getOrders({where: {id : orderid}});
+        let order = orders[0];
+        const response = await order.destroy();
+        res.status(200).json({deleted : response});
+    }catch(err){
+        if(err){
+            res.status(500).json({error : err});
+        }
+    } 
+}
