@@ -5,7 +5,7 @@ const musicdiv = document.getElementById('music-content');
 
 var openedcartpage = 1;
 
-const IP = "18.143.190.26";
+const IP = "13.229.142.253";
 
 cartbutton.addEventListener("click", ()=>{
     getcartproducts(1);
