@@ -38,6 +38,10 @@ app.use(orderroute);
 app.use(cartroute);
 app.use(adminroute);
 
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname,`public/${req.url}`));
+})
+
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 Order.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 
