@@ -5,7 +5,7 @@ const musicdiv = document.getElementById('music-content');
 
 var openedcartpage = 1;
 
-const IP = "18.143.190.26";
+const IP = "localhost";
 
 cartbutton.addEventListener("click", ()=>{
     getcartproducts(1);
@@ -85,7 +85,7 @@ async function getproducts(page) {
 async function getcartproducts(cartpage){
     openedcartpage = cartpage;
     const response = await axios.get(`http://${IP}:4000/cart?page=${cartpage}`);
-    console.log(response);
+    // console.log(response);
     showcartproducts(response.data.products);
     showcartpages(response.data);
 }
@@ -132,7 +132,7 @@ function showcartproducts(cartproducts){
     for(i=0; i<cartproducts.length; i++){
         cartproduct = cartproducts[i];
         const cartitem = document.createElement('div');
-        total_price = parseFloat(total_price) + parseFloat(cartproduct.price);
+        total_price = parseFloat(total_price) + (parseFloat(cartproduct.price) * parseInt(cartproduct.cartitem.quantity));
         cartitem.id = cartproduct.id;
         cartitem.className = "cart-row";
         cartitem.innerHTML = `<span id='cart-item-${cartproduct.id}' class='cart-item cart-column'>

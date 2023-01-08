@@ -39,7 +39,10 @@ app.use(cartroute);
 app.use(adminroute);
 
 app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname,`public/${req.url}`));
+    if(req.url === '/'){
+        req.url = "index.html";
+    }
+    res.sendFile(path.join(__dirname,`public/html/${req.url}`));
 })
 
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });

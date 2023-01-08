@@ -4,7 +4,7 @@ const cancelbutton = document.getElementById('cancelbtn');
 
 let active_button;
 
-const IP = "13.229.142.253";
+const IP = "localhost";
 
 document.addEventListener("DOMContentLoaded", getorders);
 
@@ -109,7 +109,7 @@ function showproducts(products){
     for(i=0; i<products.length; i++){
         product = products[i];
         const item = document.createElement('div');
-        total_price = parseFloat(total_price) + parseFloat(product.price);
+        total_price = parseFloat(total_price) + (parseFloat(product.price) * parseInt(product.Orderitem.quantity));
         item.id = product.id;
         item.className = "cart-row";
         item.innerHTML = `<span id='cart-item-${product.id}' class='cart-item cart-column'>
